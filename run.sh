@@ -1,0 +1,1 @@
+java -jar target/IS2-1.0-SNAPSHOT.jar
