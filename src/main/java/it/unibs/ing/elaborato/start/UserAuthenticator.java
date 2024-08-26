@@ -43,7 +43,7 @@ public class UserAuthenticator
         return userHandler.findUser(username, password);
     }
 
-    public Consumer register() throws FileWriterException
+    public Optional<Consumer> register() throws FileWriterException
     {
         Utility.clearConsole(Constants.TRANSACTION_TIME);
         Consumer consumer = null;
@@ -52,28 +52,29 @@ public class UserAuthenticator
         do
         {
             exit = false;
-            try
-            {
-                System.out.println(Constants.GRAY_FORMAT + Printer.align(Constants.REGISTRATION_CONSUMER_MESSAGE, Constants.MENU_LINE_SIZE) + Constants.RESET_FORMAT);
-                System.out.println();
-                System.out.println(Printer.columnize(Printer.printNumberedDistricts(districtHandler.getDistricts()), Constants.MENU_LINE_SIZE));
-                int district_index = Integer.parseInt(Utility.checkCondition(Constants.SELECT_FROM_THE_OPTIONS_MESSAGE, Constants.INVALID_INPUT_MESSAGE, input -> !Utility.isInt(input) || !(Integer.parseInt(input) >= Constants.NUMBER_1_MESSAGE && Integer.parseInt(input) <= districtHandler.getDistricts().size()), scanner));
-                String district_name = districtHandler.getDistricts().get(district_index - Constants.NUMBER_1_MESSAGE).getName();
-                String username = Utility.checkCondition(Constants.USERNAME_MESSAGE, Constants.INVALID_INPUT_MESSAGE, String::isBlank, scanner);
-                String password = Utility.checkCondition(Constants.PASSWORD_MESSAGE, Constants.INVALID_INPUT_MESSAGE, input -> !Utility.isPswValid(input.toCharArray(), Constants.DIGITS_REQUIREMENT, Constants.LETTERS_REQUIREMENT), scanner);
-                String email = Utility.check2Condition(Constants.MAIL_MESSAGE, Constants.INVALID_INPUT_MESSAGE, Constants.INSERT_VALID_MAIL_ADDRESS, String::isBlank, input -> !Utility.isValidEmail(input), scanner);
+            if(!districtHandler.getDistricts().isEmpty()) {
+                try {
+                    System.out.println(Constants.GRAY_FORMAT + Printer.align(Constants.REGISTRATION_CONSUMER_MESSAGE, Constants.MENU_LINE_SIZE) + Constants.RESET_FORMAT);
+                    System.out.println();
+                    System.out.println(Printer.columnize(Printer.printNumberedDistricts(districtHandler.getDistricts()), Constants.MENU_LINE_SIZE));
+                    int district_index = Integer.parseInt(Utility.checkCondition(Constants.SELECT_FROM_THE_OPTIONS_MESSAGE, Constants.INVALID_INPUT_MESSAGE, input -> !Utility.isInt(input) || !(Integer.parseInt(input) >= Constants.NUMBER_1_MESSAGE && Integer.parseInt(input) <= districtHandler.getDistricts().size()), scanner));
+                    String district_name = districtHandler.getDistricts().get(district_index - Constants.NUMBER_1_MESSAGE).getName();
+                    String username = Utility.checkCondition(Constants.USERNAME_MESSAGE, Constants.INVALID_INPUT_MESSAGE, String::isBlank, scanner);
+                    String password = Utility.checkCondition(Constants.PASSWORD_MESSAGE, Constants.INVALID_INPUT_MESSAGE, input -> !Utility.isPswValid(input.toCharArray(), Constants.DIGITS_REQUIREMENT, Constants.LETTERS_REQUIREMENT), scanner);
+                    String email = Utility.check2Condition(Constants.MAIL_MESSAGE, Constants.INVALID_INPUT_MESSAGE, Constants.INSERT_VALID_MAIL_ADDRESS, String::isBlank, input -> !Utility.isValidEmail(input), scanner);
 
-                consumer = new Consumer(username, BCrypt.hashpw(password, BCrypt.gensalt()), district_name, email);
-                userHandler.add(consumer);
-                userHandler.save();
-            } catch (IllegalArgumentException e) {
-                System.out.println(Constants.USERNAME_ALREADY_EXISTS);
-                Utility.clearConsole(Constants.TRANSACTION_TIME);
-                exit = true;
+                    consumer = new Consumer(username, BCrypt.hashpw(password, BCrypt.gensalt()), district_name, email);
+                    userHandler.add(consumer);
+                    userHandler.save();
+                } catch (IllegalArgumentException e) {
+                    System.out.println(Constants.USERNAME_ALREADY_EXISTS);
+                    Utility.clearConsole(Constants.TRANSACTION_TIME);
+                    exit = true;
+                }
             }
         } while(exit);
 
-        return consumer;
+        return Optional.ofNullable(consumer);
     }
 
     public void update(User user) throws FileWriterException

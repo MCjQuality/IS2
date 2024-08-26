@@ -13,7 +13,8 @@ import java.util.Optional;
 
 public class Main
 {
-	public static void main(String[] args)
+
+    public static void main(String[] args)
     {
 		boolean exit;
         do
@@ -45,9 +46,18 @@ public class Main
                             (input) -> (!input.equalsIgnoreCase(Constants.YES_MESSAGE) && !input.equalsIgnoreCase(Constants.NO_MESSAGE)), appInitializer.getScanner());
                     if (wantToRegister.equalsIgnoreCase(Constants.YES_MESSAGE))
                     {
-                        User newUser = authenticator.register();
-                        MenuManager menuManager = appInitializer.createMenuController(newUser);
-                        menuManager.start();
+                        if(authenticator.register().isPresent())
+                        {
+                            User newUser = authenticator.register().get();
+                            MenuManager menuManager = appInitializer.createMenuController(newUser);
+                            menuManager.start();
+                        }
+                        else
+                        {
+                            System.out.println(Constants.IMPOSSIBLE_TO_REGISTER);
+                            Utility.clearConsole(Constants.READING_TIME);
+                            exit = true;
+                        }
                     } else
                         exit = true;
                 }

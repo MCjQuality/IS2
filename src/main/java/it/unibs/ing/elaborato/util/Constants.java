@@ -215,4 +215,6 @@ public class Constants {
 	public static final int LETTERS_REQUIREMENT = 0;
 	public static final String CONSUMER = "Fruitore: ";
 	public static final String MAIL = "Mail: ";
+    public static final String IMPOSSIBLE_TO_REGISTER = "Al momento non è possibile registrarsi per via dell'assenza di distretti." +
+            "\nRiprovare piu' tardi";
 }
