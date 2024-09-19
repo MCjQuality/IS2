@@ -3,7 +3,7 @@ package it.unibs.ing.elaborato.start;
 import it.unibs.ing.elaborato.exception.FileReaderException;
 import it.unibs.ing.elaborato.exception.FileWriterException;
 import it.unibs.ing.elaborato.exception.LogoutException;
-import it.unibs.ing.elaborato.menu.MenuManager;
+import it.unibs.ing.elaborato.controller.MenuManager;
 import it.unibs.ing.elaborato.model.user.User;
 import it.unibs.ing.elaborato.util.Constants;
 import it.unibs.ing.elaborato.util.Printer;

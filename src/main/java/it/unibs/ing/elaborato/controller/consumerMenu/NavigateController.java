@@ -1,7 +1,7 @@
-package it.unibs.ing.elaborato.menu.consumerMenu;
+package it.unibs.ing.elaborato.controller.consumerMenu;
 
 import it.unibs.ing.elaborato.model.hierarchy.HierarchyHandler;
-import it.unibs.ing.elaborato.menu.Executable;
+import it.unibs.ing.elaborato.controller.Executable;
 import it.unibs.ing.elaborato.util.Constants;
 import it.unibs.ing.elaborato.util.Printer;
 import it.unibs.ing.elaborato.util.Utility;

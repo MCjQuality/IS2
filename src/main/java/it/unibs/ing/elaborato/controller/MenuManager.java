@@ -1,4 +1,4 @@
-package it.unibs.ing.elaborato.menu;
+package it.unibs.ing.elaborato.controller;
 
 import it.unibs.ing.elaborato.model.closedSet.ClosedSetHandler;
 import it.unibs.ing.elaborato.model.conversionElement.ConversionElementHandler;
@@ -6,8 +6,8 @@ import it.unibs.ing.elaborato.model.district.DistrictHandler;
 import it.unibs.ing.elaborato.exception.FileWriterException;
 import it.unibs.ing.elaborato.exception.LogoutException;
 import it.unibs.ing.elaborato.model.hierarchy.HierarchyHandler;
-import it.unibs.ing.elaborato.menu.configMenu.MenuConfigContext;
-import it.unibs.ing.elaborato.menu.consumerMenu.MenuConsumerContext;
+import it.unibs.ing.elaborato.controller.configMenu.MenuConfigContext;
+import it.unibs.ing.elaborato.controller.consumerMenu.MenuConsumerContext;
 import it.unibs.ing.elaborato.model.proposal.ExchangeProposalHandler;
 import it.unibs.ing.elaborato.model.user.Consumer;
 import it.unibs.ing.elaborato.model.user.User;

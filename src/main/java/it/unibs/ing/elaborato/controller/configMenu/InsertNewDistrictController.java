@@ -1,41 +1,33 @@
-package it.unibs.ing.elaborato.menu.configMenu;
+package it.unibs.ing.elaborato.controller.configMenu;
 
 import it.unibs.ing.elaborato.model.district.DistrictHandler;
 import it.unibs.ing.elaborato.exception.FileWriterException;
-import it.unibs.ing.elaborato.menu.Executable;
+import it.unibs.ing.elaborato.controller.Executable;
 import it.unibs.ing.elaborato.util.Constants;
-import it.unibs.ing.elaborato.util.Printer;
 import it.unibs.ing.elaborato.util.Utility;
+import it.unibs.ing.elaborato.view.DistrictView;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 
 public class InsertNewDistrictController implements Executable {
 
     private final DistrictHandler service;
-    private final Scanner scanner;
+    private final DistrictView view;
 
-    public InsertNewDistrictController(DistrictHandler service, Scanner scanner) {
+    public InsertNewDistrictController(DistrictHandler service, DistrictView view) {
         this.service = service;
-        this.scanner = scanner;
+        this.view = view;
     }
 
     public void insertNewDistrict() throws FileWriterException {
-        displayInsertDistrictMessage();
-
         boolean fail;
-
         do {
             fail = false;
-            String name = Utility.checkCondition(
-                    Constants.INSERT_DISTRICT_NAME_MESSAGE,
-                    Constants.INVALID_INPUT_MESSAGE,
-                    String::isBlank,
-                    scanner);
-            if(service.isDistrictExists(name)) {
+            String name = view.getDistrictName();
+            if (service.isDistrictExists(name)) {
                 fail = true;
-                System.out.println(Constants.DISTRICT_ALREADY_INSERTED);
+                view.showMessage(Constants.DISTRICT_ALREADY_INSERTED);
             }
 
             List<String> municipalities = new ArrayList<>();
@@ -44,30 +36,30 @@ public class InsertNewDistrictController implements Executable {
         } while(fail);
     }
 
-    private void displayInsertDistrictMessage() {
-        System.out.println();
-        System.out.println(Printer.align(Constants.INSERT_NEW_DISTRICT_MESSAGE, Constants.MENU_LINE_SIZE));
-        System.out.println();
-    }
-
     private void addMunicipalities(List<String> municipalities) {
-        System.out.println(Constants.INSERT_MUNICIPALITY_BELONG_DISTRICT_MESSAGE);
+        view.showMessage(Constants.INSERT_MUNICIPALITY_BELONG_DISTRICT_MESSAGE);
         String candidate;
 
         do {
-            System.out.print(Constants.SEPARATOR);
-            candidate = scanner.nextLine();
+            candidate = view.getMunicipalityInput();
+            if (candidate.equalsIgnoreCase(Constants.Q_MESSAGE) && !municipalities.isEmpty()) {
+                break;
+            }
             processMunicipalityInput(candidate, municipalities);
-        } while (!candidate.equalsIgnoreCase(Constants.Q_MESSAGE) || municipalities.isEmpty());
+        } while (!candidate.equalsIgnoreCase(Constants.Q_MESSAGE));
     }
 
     private void processMunicipalityInput(String candidate, List<String> municipalities) {
         if (candidate.equalsIgnoreCase(Constants.Q_MESSAGE)) {
-            System.out.println();
+            return;
         } else if (isMunicipalityValid(candidate, municipalities)) {
             municipalities.add(candidate);
         } else {
-            displayMunicipalityError(candidate, municipalities);
+            if (service.isMunicipalityPresent(candidate) || municipalities.contains(candidate)) {
+                view.showMessage(Constants.DUPLICATED_MUNICIPALITY_MESSAGE);
+            } else {
+                view.showMessage(Constants.MUNICIPALITY_NONEXISTENT);
+            }
         }
     }
 
@@ -77,28 +69,19 @@ public class InsertNewDistrictController implements Executable {
                 !municipalities.contains(municipality);
     }
 
-    private void displayMunicipalityError(String municipality, List<String> municipalities) {
-        if (service.isMunicipalityPresent(municipality) || municipalities.contains(municipality)) {
-            System.out.println(Constants.DUPLICATED_MUNICIPALITY_MESSAGE);
-        } else {
-            System.out.println(Constants.MUNICIPALITY_NONEXISTENT);
-        }
-    }
-
     private void saveDistrictChanges(String district, List<String> municipalities) throws FileWriterException {
-        System.out.print(Constants.SAVE_THE_CHANGES_MESSAGE);
         boolean fail;
         do {
             fail = false;
-            String response = scanner.nextLine();
+            String response = view.confirmSaveChanges();
             if (response.equalsIgnoreCase(Constants.YES_MESSAGE)) {
                 service.addDistrict(district, municipalities);
                 service.save();
-                System.out.println(Constants.DISTRICT_VALID_MESSAGE);
+                view.showMessage(Constants.DISTRICT_VALID_MESSAGE);
             } else if (response.equalsIgnoreCase(Constants.NO_MESSAGE)) {
-                System.out.println(Constants.DISTRICT_NOT_SAVED_MESSAGE);
+                view.showMessage(Constants.DISTRICT_NOT_SAVED_MESSAGE);
             } else {
-                System.out.print(Constants.INVALID_INPUT_MESSAGE);
+                view.showMessage(Constants.INVALID_INPUT_MESSAGE);
                 fail = true;
             }
         } while(fail);

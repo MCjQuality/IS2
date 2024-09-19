@@ -10,7 +10,7 @@ import it.unibs.ing.elaborato.exception.FileReaderException;
 import it.unibs.ing.elaborato.exception.FileWriterException;
 import it.unibs.ing.elaborato.model.hierarchy.HierarchyHandler;
 import it.unibs.ing.elaborato.model.hierarchy.StandardSerializationBasedHierarchyRepository;
-import it.unibs.ing.elaborato.menu.MenuManager;
+import it.unibs.ing.elaborato.controller.MenuManager;
 import it.unibs.ing.elaborato.model.proposal.ExchangeProposalHandler;
 import it.unibs.ing.elaborato.model.proposal.StandardSerializationBasedExchangeProposalRepository;
 import it.unibs.ing.elaborato.model.user.StandardSerializationBasedUserRepository;

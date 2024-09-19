@@ -1,4 +1,4 @@
-package it.unibs.ing.elaborato.menu;
+package it.unibs.ing.elaborato.controller;
 
 import it.unibs.ing.elaborato.util.Constants;
 
